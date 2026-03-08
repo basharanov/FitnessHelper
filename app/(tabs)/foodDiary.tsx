@@ -1,9 +1,11 @@
 import { Text, View, StyleSheet } from "react-native";
+import ProgressCircle from "../../components/ProgressCircle";
 
 export default function FoodDiaryScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Calorie Diary</Text>
+      <ProgressCircle progressValue={0} />
+      <Text style={styles.text}>Calorie Progress</Text>
     </View>
   );
 }
