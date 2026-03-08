@@ -21,10 +21,19 @@ function colorCalculation(value: number) {
   return "green";
 }
 
+function progressValidation(value: any) {
+  const num = parseFloat(value);
+  if (isNaN(num)) {
+    return 0;
+  }
+  return Math.max(0, Math.min(1, num));
+}
+
 export default function ProgressCircle({ progressValue, size }: Props) {
+  const progress = progressValidation(progressValue);
   return (
     <Circle
-      progress={progressValue}
+      progress={progress}
       size={size}
       color={colorCalculation(progressValue)}
       borderColor="none"
