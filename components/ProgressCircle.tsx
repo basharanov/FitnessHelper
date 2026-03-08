@@ -1,7 +1,7 @@
 import { Circle } from "react-native-progress";
 
 type Props = {
-  progressValue: number;
+  progressValue: any;
   size: number;
 };
 
@@ -22,11 +22,11 @@ function colorCalculation(value: number) {
 }
 
 function progressValidation(value: any) {
-  const num = parseFloat(value);
+  const num = parseFloat(value) / 100;
   if (isNaN(num)) {
     return 0;
   }
-  return Math.max(0, Math.min(1, num));
+  return num;
 }
 
 export default function ProgressCircle({ progressValue, size }: Props) {
@@ -35,7 +35,7 @@ export default function ProgressCircle({ progressValue, size }: Props) {
     <Circle
       progress={progress}
       size={size}
-      color={colorCalculation(progressValue)}
+      color={colorCalculation(progress)}
       borderColor="none"
       thickness={8}
       strokeCap="round"
