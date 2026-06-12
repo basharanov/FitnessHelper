@@ -1,7 +1,9 @@
 import { Circle } from "react-native-progress";
+import React from "react";
+import { FoodData } from "../context/ScannedFoodContext";
 
 type Props = {
-  progressValue: any;
+  progressValue: number;
   size: number;
 };
 
@@ -18,7 +20,21 @@ function colorCalculation(value: number) {
   if (value <= 0.8) {
     return "lightgreen";
   }
-  return "green";
+  if (value <= 1.2) {
+    return "green";
+  }
+  if (value <= 1.4) {
+    return "lightgreen";
+  }
+  if (value <= 1.6) {
+    return "yellow";
+  }
+  if (value <= 1.8) {
+    return "orange";
+  }
+  if (value > 1.8) {
+    return "red";
+  }
 }
 
 function progressValidation(value: any) {

@@ -1,52 +1,32 @@
-import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Button,
-  FlatList,
-} from "react-native";
-import ProgressCircle from "../../components/ProgressCircle";
+import React, { useState } from "react";
+import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import FoodCard from "../../components/FoodCard";
+import ProgressCircle from "../../components/ProgressCircle";
+import useScannedFoodContext, {
+  FoodData,
+} from "../../context/ScannedFoodContext";
 
 export default function FoodDiaryScreen() {
-  type FoodData = {
-    barcode: string;
-    name: string;
-    protein: number | string;
-    carbohydrates: number | string;
-    fat: number | string;
-    kcal: number | string;
-    sugar: number | string;
-    salt: number | string;
-  };
   const [targetCalories, onChangeTargetCalories] = React.useState(2000);
   const [targetProtein, onChangeTargetProtein] = React.useState(150);
   const [targetCarbs, onChangeTargetCarbs] = React.useState(250);
   const [targetFat, onChangeTargetFat] = React.useState(70);
   const [foodName, onChangeFoodName] = React.useState("");
   const [foodData, setFoodData] = useState<FoodData | null>(null);
-  const [scanedFoodData, setScanedFoodData] = useState<FoodData[]>([]);
 
   const router = useRouter();
   const params = useLocalSearchParams<{ data?: string }>();
-  const scannedFood = params.data;
+  const { savedFood, calculateTotalValues } = useScannedFoodContext();
 
-  useEffect(() => {
-    if (!scannedFood) return;
-    const parsedFood: FoodData = JSON.parse(scannedFood);
-    setFoodData(parsedFood);
-    setScanedFoodData((prev) => [...(prev || []), parsedFood]);
-  }, [scannedFood]);
+  const totalValues = calculateTotalValues();
 
   const displayProcent = (
     value: number | string | undefined,
     target: number,
   ) => {
-    if (typeof value === "string") return;
-    if (typeof value === "undefined") return;
+    if (typeof value === "string") return 0;
+    if (typeof value === "undefined") return 0;
     return Math.round((value / target) * 100);
   };
 
@@ -55,39 +35,46 @@ export default function FoodDiaryScreen() {
       <View style={styles.summaryBox}>
         <View style={styles.macroItem}>
           <ProgressCircle
-            progressValue={displayProcent(foodData?.kcal, targetCalories)}
+            progressValue={displayProcent(totalValues?.kcal, targetCalories)}
             size={150}
           />
-          <Text style={styles.macroText}>Calories {foodData?.kcal} kcal</Text>
+          <Text style={styles.macroText}>
+            Calories {totalValues?.kcal} kcal
+          </Text>
         </View>
         <View style={styles.macrosContainer}>
           <View style={styles.macroItem}>
             <ProgressCircle
-              progressValue={displayProcent(foodData?.protein, targetProtein)}
-              size={90}
-            />
-            <Text style={styles.macroText}>Protein {foodData?.protein}g</Text>
-          </View>
-
-          <View style={styles.macroItem}>
-            <ProgressCircle
               progressValue={displayProcent(
-                foodData?.carbohydrates,
-                targetCarbs,
+                totalValues?.protein,
+                targetProtein,
               )}
               size={90}
             />
             <Text style={styles.macroText}>
-              Carbs {foodData?.carbohydrates}g
+              Protein {totalValues?.protein}g
             </Text>
           </View>
 
           <View style={styles.macroItem}>
             <ProgressCircle
-              progressValue={displayProcent(foodData?.fat, targetFat)}
+              progressValue={displayProcent(
+                totalValues?.carbohydrates,
+                targetCarbs,
+              )}
               size={90}
             />
-            <Text style={styles.macroText}>Fat {foodData?.fat}g</Text>
+            <Text style={styles.macroText}>
+              Carbs {totalValues?.carbohydrates}g
+            </Text>
+          </View>
+
+          <View style={styles.macroItem}>
+            <ProgressCircle
+              progressValue={displayProcent(totalValues?.fat, targetFat)}
+              size={90}
+            />
+            <Text style={styles.macroText}>Fat {totalValues?.fat}g</Text>
           </View>
         </View>
       </View>
@@ -99,9 +86,9 @@ export default function FoodDiaryScreen() {
       <Text style={styles.macroText}>{foodName}</Text>
 
       <FlatList
-        data={scanedFoodData}
-        renderItem={({ item }) => <FoodCard food={item} />}
-        keyExtractor={(item) => item.barcode}
+        data={savedFood}
+        renderItem={({ item }) => <FoodCard food={item} onDelete={() => {}} />}
+        keyExtractor={(item) => item?.id.toString()}
       />
     </View>
   );
