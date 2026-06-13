@@ -53,9 +53,12 @@ export default function BarcodeScan() {
                   setScanned(false);
                   return;
                 }
-                addFood(barcodeData);
+                //addFood(barcodeData);
                 router.replace({
-                  pathname: "/foodDiary",
+                  pathname: "/add-food",
+                  params: {
+                    barcodeData: JSON.stringify(barcodeData),
+                  },
                 });
               }
         }

@@ -10,6 +10,7 @@ export type FoodData = {
   kcal: number | string;
   sugar: number | string;
   salt: number | string;
+  grams: number | string;
 };
 
 type ScannedFoodContextType = {
@@ -22,6 +23,7 @@ type ScannedFoodContextType = {
     fat: number;
     sugar: number;
     salt: number;
+    grams: number;
   };
 };
 
@@ -37,6 +39,7 @@ const ScannedFood = createContext<ScannedFoodContextType>({
     fat: 0,
     sugar: 0,
     salt: 0,
+    grams: 0,
   }),
 });
 
@@ -73,9 +76,20 @@ export const ScannedFoodProvider = ({
         if (typeof food.salt === "number") {
           total.salt += food.salt;
         }
+        if (typeof food.grams === "number") {
+          total.grams += food.grams;
+        }
         return total;
       },
-      { kcal: 0, protein: 0, carbohydrates: 0, fat: 0, sugar: 0, salt: 0 },
+      {
+        kcal: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fat: 0,
+        sugar: 0,
+        salt: 0,
+        grams: 0,
+      },
     );
   };
 
