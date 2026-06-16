@@ -5,7 +5,7 @@ export type FoodData = {
   barcode: string;
   name: string;
   protein: number | string;
-  carbohydrates: number | string;
+  carbs: number | string;
   fat: number | string;
   kcal: number | string;
   sugar: number | string;
@@ -19,7 +19,7 @@ type ScannedFoodContextType = {
   calculateTotalValues: () => {
     kcal: number;
     protein: number;
-    carbohydrates: number;
+    carbs: number;
     fat: number;
     sugar: number;
     salt: number;
@@ -35,7 +35,7 @@ const ScannedFood = createContext<ScannedFoodContextType>({
   calculateTotalValues: () => ({
     kcal: 0,
     protein: 0,
-    carbohydrates: 0,
+    carbs: 0,
     fat: 0,
     sugar: 0,
     salt: 0,
@@ -64,8 +64,8 @@ export const ScannedFoodProvider = ({
         if (typeof food.protein === "number") {
           total.protein += food.protein;
         }
-        if (typeof food.carbohydrates === "number") {
-          total.carbohydrates += food.carbohydrates;
+        if (typeof food.carbs === "number") {
+          total.carbs += food.carbs;
         }
         if (typeof food.fat === "number") {
           total.fat += food.fat;
@@ -84,7 +84,7 @@ export const ScannedFoodProvider = ({
       {
         kcal: 0,
         protein: 0,
-        carbohydrates: 0,
+        carbs: 0,
         fat: 0,
         sugar: 0,
         salt: 0,

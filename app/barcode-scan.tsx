@@ -57,7 +57,7 @@ export default function BarcodeScan() {
                 router.replace({
                   pathname: "/add-food",
                   params: {
-                    barcodeData: JSON.stringify(barcodeData),
+                    foodD: JSON.stringify(barcodeData),
                   },
                 });
               }

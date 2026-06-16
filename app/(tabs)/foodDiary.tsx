@@ -83,7 +83,10 @@ export default function FoodDiaryScreen() {
         title="Barcode scan"
         onPress={() => router.push("/barcode-scan")}
       ></Button>
-      <Text style={styles.macroText}>{foodName}</Text>
+      <Button
+        title="Add food"
+        onPress={() => router.push("/search-food")}
+      ></Button>
 
       <FlatList
         data={savedFood}

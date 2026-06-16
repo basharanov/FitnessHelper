@@ -1,6 +1,6 @@
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { useScannedFood } from "../context/ScannedFoodContext";
 
 export default function addFood() {
@@ -20,10 +20,10 @@ export default function addFood() {
     setGrams(text);
   };
   const router = useRouter();
-  const { barcodeData } = useLocalSearchParams<{
-    barcodeData: string;
+  const { foodD } = useLocalSearchParams<{
+    foodD: string;
   }>();
-  const foodData = JSON.parse(barcodeData);
+  const foodData = JSON.parse(foodD);
   return (
     <>
       <View style={styles.foodNameView}>
@@ -56,9 +56,9 @@ export default function addFood() {
         </Text>
         <Text>
           Carbs{" "}
-          {foodData.carbohydrates === "Unknown"
+          {foodData.carbs === "Unknown"
             ? "0"
-            : foodData.carbohydrates * (Number(grams) / 100)}
+            : foodData.carbs * (Number(grams) / 100)}
         </Text>
         <Text>
           Fat{" "}

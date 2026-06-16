@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { FoodData } from "../context/ScannedFoodContext";
-import { Button } from "@react-navigation/elements";
 
 const foodCardPicture = require("../assets/images/foodCardPicture.webp");
 
@@ -51,7 +43,7 @@ export default function FoodCard({ food, onDelete }: FoodCardProps) {
             Protein: {calculateValue(food.protein)} g,
           </Text>
           <Text style={styles.nutrientText}>
-            Carbs: {calculateValue(food.carbohydrates)} g,
+            Carbs: {calculateValue(food.carbs)} g,
           </Text>
           <Text style={styles.nutrientText}>
             Fat: {calculateValue(food.fat)} g
