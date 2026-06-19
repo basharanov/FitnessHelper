@@ -58,15 +58,10 @@ export default function FoodDiaryScreen() {
 
           <View style={styles.macroItem}>
             <ProgressCircle
-              progressValue={displayProcent(
-                totalValues?.carbohydrates,
-                targetCarbs,
-              )}
+              progressValue={displayProcent(totalValues?.carbs, targetCarbs)}
               size={90}
             />
-            <Text style={styles.macroText}>
-              Carbs {totalValues?.carbohydrates}g
-            </Text>
+            <Text style={styles.macroText}>Carbs {totalValues?.carbs}g</Text>
           </View>
 
           <View style={styles.macroItem}>

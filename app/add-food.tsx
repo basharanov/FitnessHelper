@@ -25,58 +25,59 @@ export default function addFood() {
   }>();
   const foodData = JSON.parse(foodD);
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.foodNameView}>
-        <Text>{foodData.name}</Text>
+        <Text style={styles.textContent}>{foodData.name}</Text>
       </View>
       <View style={styles.textInputView}>
-        <Text>Amount in grams:</Text>
+        <Text style={styles.textContent}>Amount in grams:</Text>
 
         <TextInput
           value={grams}
           onChangeText={handleGramsChange}
           keyboardType="number-pad"
+          style={styles.textContent}
         />
         {gramsError !== "" && (
           <Text style={{ color: "red" }}>{gramsError}</Text>
         )}
       </View>
       <View style={styles.nurtritionView}>
-        <Text>
+        <Text style={styles.textContent}>
           Calories{" "}
           {foodData.kcal === "Unknown"
             ? "0"
-            : foodData.kcal * (Number(grams) / 100)}
+            : (foodData.kcal * (Number(grams) / 100)).toFixed(2)}
         </Text>
-        <Text>
+        <Text style={styles.textContent}>
           Protein{" "}
           {foodData.protein === "Unknown"
             ? "0"
-            : foodData.protein * (Number(grams) / 100)}
+            : (foodData.protein * (Number(grams) / 100)).toFixed(2)}
         </Text>
-        <Text>
+        <Text style={styles.textContent}>
           Carbs{" "}
           {foodData.carbs === "Unknown"
             ? "0"
-            : foodData.carbs * (Number(grams) / 100)}
+            : (foodData.carbs * (Number(grams) / 100)).toFixed(2)}
         </Text>
-        <Text>
+        <Text style={styles.textContent}>
           Fat{" "}
           {foodData.fat === "Unknown"
             ? "0"
-            : foodData.fat * (Number(grams) / 100)}
+            : (foodData.fat * (Number(grams) / 100)).toFixed(1)}
         </Text>
-        <Text>
+        <Text style={styles.textContent}>
           Salt{" "}
           {foodData.salt === "Unknown"
             ? "0"
-            : foodData.salt * (Number(grams) / 100)}
+            : (foodData.salt * (Number(grams) / 100)).toFixed(2)}
         </Text>
-        <Text>
+        <Text style={styles.textContent}>
           Sugar{" "}
           {foodData.sugar === "Unknown"
             ? "0"
-            : foodData.sugar * (Number(grams) / 100)}
+            : (foodData.sugar * (Number(grams) / 100)).toFixed(1)}
         </Text>
       </View>
       <View style={styles.buttonView}>
@@ -95,25 +96,34 @@ export default function addFood() {
           }}
         />
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  foodNameView: {
+  container: {
     flex: 1,
+    justifyContent: "flex-start",
+    backgroundColor: "#252625",
+  },
+  textContent: {
+    fontSize: 20,
+    color: "#fff",
+  },
+  foodNameView: {
+    marginBottom: 20,
     textAlign: "center",
   },
   textInputView: {
-    flex: 1,
     textAlign: "center",
+    marginBottom: 20,
   },
   nurtritionView: {
-    flex: 1,
     textAlign: "center",
+    marginBottom: 20,
   },
   buttonView: {
-    flex: 1,
     textAlign: "center",
+    marginBottom: 20,
   },
 });

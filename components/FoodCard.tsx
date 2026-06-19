@@ -15,11 +15,11 @@ export default function FoodCard({ food, onDelete }: FoodCardProps) {
   const gramsNumber = Number(grams.replace(",", ".")) || 0;
 
   const calculateValue = (value: number | string) => {
-    if (typeof value !== "number") {
-      return "Unknown";
+    if (value === "Unknown") {
+      return value;
     }
 
-    const result = (value * gramsNumber) / 100;
+    const result = (Number(value) * gramsNumber) / 100;
     return Number(result.toFixed(1));
   };
 

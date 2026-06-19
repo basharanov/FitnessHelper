@@ -59,9 +59,9 @@ const styles = StyleSheet.create({
   },
 
   selectedCard: {
-    borderColor: "#2563eb",
+    borderColor: "#fcfcfc",
     borderWidth: 2,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#30cf3d",
   },
 
   pressedCard: {
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   selectedText: {
     marginTop: 8,
     fontSize: 13,
-    color: "#2563eb",
+    color: "#111827",
     fontWeight: "600",
   },
 });

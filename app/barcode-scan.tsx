@@ -1,14 +1,34 @@
-import { CameraView } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRootNavigationState, useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { useScannedFood } from "../context/ScannedFoodContext";
 
 export default function BarcodeScan() {
   const [error, setError] = useState("");
   const [scanned, setScanned] = useState(false);
   const { addFood } = useScannedFood();
+  const [permission, requestPermission] = useCameraPermissions();
+  const router = useRouter();
+  const rootNavigationState = useRootNavigationState();
+  const isProcessingRef = useRef(false);
+  // State to prevent multiple scans
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
 
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
   async function searchFood(string: string) {
     try {
       setError("");
@@ -24,10 +44,6 @@ export default function BarcodeScan() {
       console.log(err);
     }
   }
-  const router = useRouter();
-  const rootNavigationState = useRootNavigationState();
-  const isProcessingRef = useRef(false);
-  // State to prevent multiple scans
 
   return (
     <View style={styles.container}>
@@ -73,5 +89,9 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+  },
+  message: {
+    textAlign: "center",
+    paddingBottom: 10,
   },
 });

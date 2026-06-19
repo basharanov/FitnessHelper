@@ -57,8 +57,12 @@ export default function SearchFood() {
   }, [search]);
 
   return (
-    <View>
-      <TextInput value={search} onChangeText={setSearch} />
+    <View style={styles.container}>
+      <TextInput
+        style={styles.textContent}
+        value={search}
+        onChangeText={setSearch}
+      />
 
       <Button
         title="Add Food"
@@ -97,6 +101,12 @@ export default function SearchFood() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "flex-start",
+    backgroundColor: "#252625",
+  },
+  textContent: {
+    fontSize: 20,
+    color: "#fff",
   },
   camera: {
     flex: 1,
