@@ -120,15 +120,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#fff",
   },
-  camera: {
-    flex: 1,
-  },
-  itemText: {
-    margin: 10,
-    color: "white",
-    fontSize: 24,
-    backgroundColor: "blue",
-    width: "100%",
-    height: 50,
-  },
 });

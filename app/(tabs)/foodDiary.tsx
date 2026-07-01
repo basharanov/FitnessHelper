@@ -83,7 +83,7 @@ export default function FoodDiaryScreen() {
         onPress={() => router.push("/search-food")}
       ></Button>
       <Button
-        title="Add custom food"
+        title="Add from custom food"
         onPress={() => router.push("/custom-food")}
       ></Button>
 
