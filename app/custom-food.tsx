@@ -2,9 +2,10 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
 import SearchItem from "../components/SearchItem";
-import { useScannedFood } from "../context/ScannedFoodContext";
 
-type Food = {
+const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
+
+type CustomFood = {
   id: number | string;
   name: string;
   kcal: number | string;
@@ -14,47 +15,49 @@ type Food = {
   salt: number | string;
   sugar: number | string;
   grams: number | string;
+  description: string;
 };
 
-export default function SearchFood() {
+export default function CustomFood() {
   const [error, setError] = useState("");
+  const [customFoodData, setCustomFoodData] = useState<CustomFood[]>([]);
   const [search, setSearch] = useState("");
-  const [searchFood, setSearchFood] = useState<Food[]>([]);
-  const [selectedFood, setSelectedFood] = useState<Food>();
-  const [selectedFoodId, setSelectedFoodId] = useState<string | number>();
+  const [selectedCustomFoodData, setSelectedCustomFoodData] =
+    useState<CustomFood>();
+  const [selectedCustomFoodId, setSelectedCustomFoodId] = useState<
+    string | number
+  >();
 
   const router = useRouter();
 
-  async function searchMultipleFoods(string: string) {
-    try {
-      if (string.length <= 2) {
-        return;
-      }
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      searchMultipleCustomFoods(search, TEMP_USER_ID);
+    }, 500);
 
+    return () => clearTimeout(timeoutId);
+  }, [search]);
+
+  async function searchMultipleCustomFoods(name: string, userId: string) {
+    try {
       setError("");
-      const response = await fetch(`http://192.168.1.5:3000/food/${string}`);
+      const response = await fetch(
+        `http://192.168.1.5:3000/custom-food/${name}?userId=${userId}`,
+      );
 
       const data = await response.json();
       if (!data) {
         setError("No data received");
         console.log(error);
       }
+
       console.log("DATA:", data);
-      setSearchFood(data);
+      setCustomFoodData(data);
     } catch (err) {
       setError("Failed to fetch");
-      console.log(err);
+      console.log(error);
     }
   }
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      searchMultipleFoods(search);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [search]);
-
   return (
     <View style={styles.container}>
       <TextInput
@@ -62,32 +65,42 @@ export default function SearchFood() {
         value={search}
         onChangeText={setSearch}
       />
-
       <Button
         title="Add Food"
         onPress={() => {
-          if (!selectedFood) {
+          if (!selectedCustomFoodData) {
             return;
           }
           router.replace({
             pathname: "/add-food",
             params: {
-              foodD: JSON.stringify(selectedFood),
+              foodD: JSON.stringify(selectedCustomFoodData),
+            },
+          });
+        }}
+      ></Button>
+      <Button
+        title="Create custom food"
+        onPress={() => {
+          router.replace({
+            pathname: "/create-custom-food",
+            params: {
+              foodD: JSON.stringify(selectedCustomFoodData),
             },
           });
         }}
       ></Button>
       <FlatList
-        data={searchFood}
+        data={customFoodData}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => {
           return (
             <SearchItem
               food={item}
-              isSelected={selectedFoodId === item.id}
+              isSelected={selectedCustomFoodId === item.id}
               onPress={() => {
-                setSelectedFood(item);
-                setSelectedFoodId(item.id);
+                setSelectedCustomFoodData(item);
+                setSelectedCustomFoodId(item.id);
               }}
             />
           );

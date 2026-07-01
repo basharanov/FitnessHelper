@@ -33,7 +33,7 @@ export default function BarcodeScan() {
     try {
       setError("");
       const response = await fetch(
-        `http://192.168.1.3:3000/products/barcode/${string}`,
+        `http://192.168.1.5:3000/products/barcode/${string}`,
       );
 
       const data = await response.json();
