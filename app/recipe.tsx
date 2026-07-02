@@ -5,44 +5,50 @@ import SearchItem from "../components/SearchItem";
 
 const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
 
-type CustomFood = {
-  id: string;
-  name: string;
-  kcal: number | string;
-  carbs: number | string;
-  fat: number | string;
-  protein: number | string;
-  salt: number | string;
-  sugar: number | string;
+type IngrediеntItems = {
+  foodId: string;
   grams: number | string;
-  description: string;
 };
 
-export default function CustomFood() {
-  const [error, setError] = useState("");
-  const [customFoodData, setCustomFoodData] = useState<CustomFood[]>([]);
+type RecipeItems = {
+  id: string;
+  name: string;
+  description: string;
+  userId: string;
+  portions: number;
+  timeMinutes: number;
+  kcal: number;
+  carbs: number;
+  fat: number;
+  protein: number;
+  salt: number;
+  sugar: number;
+  ingredients: IngrediеntItems[];
+  grams: number;
+};
+
+export default function Recipe() {
   const [search, setSearch] = useState("");
-  const [selectedCustomFoodData, setSelectedCustomFoodData] =
-    useState<CustomFood>();
-  const [selectedCustomFoodId, setSelectedCustomFoodId] = useState<
-    string | number
-  >();
+  const [error, setError] = useState("");
+  const [recipeData, setRecipeData] = useState<RecipeItems[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<RecipeItems>();
+  const [selectedRecipeId, setSelectedRecipeId] = useState("");
 
   const router = useRouter();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      searchMultipleCustomFoods(search, TEMP_USER_ID);
+      searchMultipleRecipes(search, TEMP_USER_ID);
     }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [search]);
 
-  async function searchMultipleCustomFoods(name: string, userId: string) {
+  async function searchMultipleRecipes(name: string, userId: string) {
     try {
       setError("");
       const response = await fetch(
-        `http://192.168.1.5:3000/custom-food/${name}?userId=${userId}`,
+        `http://192.168.1.5:3000/recipe/${name}?userId=${userId}`,
       );
 
       const data = await response.json();
@@ -52,12 +58,12 @@ export default function CustomFood() {
       }
 
       console.log("DATA:", data);
-      setCustomFoodData(data);
+      setRecipeData(data);
     } catch (err) {
-      setError("Failed to fetch");
-      console.log(error);
+      console.log("Failed to fetch", err);
     }
   }
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -66,41 +72,41 @@ export default function CustomFood() {
         onChangeText={setSearch}
       />
       <Button
-        title="Add Custom Food"
+        title="add recipe"
         onPress={() => {
-          if (!selectedCustomFoodData) {
+          if (!selectedRecipe) {
             return;
           }
           router.replace({
             pathname: "/add-food",
             params: {
-              foodD: JSON.stringify(selectedCustomFoodData),
+              foodD: JSON.stringify(selectedRecipe),
             },
           });
         }}
       ></Button>
       <Button
-        title="Create custom food"
+        title="Create Recipe"
         onPress={() => {
           router.replace({
-            pathname: "/create-custom-food",
+            pathname: "/create-recipe",
             params: {
-              foodD: JSON.stringify(selectedCustomFoodData),
+              foodD: JSON.stringify(selectedRecipe),
             },
           });
         }}
       ></Button>
       <FlatList
-        data={customFoodData}
+        data={recipeData}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => {
           return (
             <SearchItem
               food={item}
-              isSelected={selectedCustomFoodId === item.id}
+              isSelected={selectedRecipeId === item.id}
               onPress={() => {
-                setSelectedCustomFoodData(item);
-                setSelectedCustomFoodId(item.id);
+                setSelectedRecipe(item);
+                setSelectedRecipeId(item.id);
               }}
             />
           );

@@ -86,6 +86,10 @@ export default function FoodDiaryScreen() {
         title="Add from custom food"
         onPress={() => router.push("/custom-food")}
       ></Button>
+      <Button
+        title="Add from recepies"
+        onPress={() => router.push("/recipe")}
+      ></Button>
 
       <FlatList
         data={savedFood}

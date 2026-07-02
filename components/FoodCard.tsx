@@ -46,7 +46,7 @@ export default function FoodCard({ food, onDelete }: FoodCardProps) {
             Carbs: {calculateValue(food.carbs)} g,
           </Text>
           <Text style={styles.nutrientText}>
-            Fat: {calculateValue(food.fat)} g
+            Fats: {calculateValue(food.fat)} g
           </Text>
           <Text style={styles.nutrientText}>
             Grams: {calculateValue(food.grams)} g

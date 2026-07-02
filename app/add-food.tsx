@@ -62,10 +62,10 @@ export default function addFood() {
             : (foodData.carbs * (Number(grams) / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
-          Fat{" "}
-          {foodData.fat === "Unknown"
+          Fats{" "}
+          {foodData.fats === "Unknown"
             ? "0"
-            : (foodData.fat * (Number(grams) / 100)).toFixed(1)}
+            : (foodData.fats * (Number(grams) / 100)).toFixed(1)}
         </Text>
         <Text style={styles.textContent}>
           Salt{" "}

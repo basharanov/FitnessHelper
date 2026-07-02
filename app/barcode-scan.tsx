@@ -69,7 +69,7 @@ export default function BarcodeScan() {
                   setScanned(false);
                   return;
                 }
-                //addFood(barcodeData);
+
                 router.replace({
                   pathname: "/add-food",
                   params: {
