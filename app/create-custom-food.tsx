@@ -15,13 +15,13 @@ const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
 export default function CreateCustomFood() {
   const [error, setError] = useState("");
   const [name, setName] = useState("");
-  const [kcal, setKcal] = useState("0");
-  const [protein, setProtein] = useState("0");
-  const [carbs, setCarbs] = useState("0");
-  const [fats, setFats] = useState("0");
-  const [sugar, setSugar] = useState("0");
-  const [salt, setSalt] = useState("0");
-  const [grams, setGrams] = useState("0");
+  const [kcal, setKcal] = useState("");
+  const [protein, setProtein] = useState("");
+  const [carbs, setCarbs] = useState("");
+  const [fat, setFat] = useState("");
+  const [sugar, setSugar] = useState("");
+  const [salt, setSalt] = useState("");
+  const [grams, setGrams] = useState("");
   const [description, setDescription] = useState("");
 
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function CreateCustomFood() {
           kcal: kcal,
           protein: protein,
           carbs: carbs,
-          fats: fats,
+          fat: fat,
           sugar: sugar,
           salt: salt,
           grams: grams,
@@ -97,9 +97,9 @@ export default function CreateCustomFood() {
         <Text style={styles.text}>Fats:</Text>
         <TextInput
           style={styles.textContent}
-          value={fats}
+          value={fat}
           keyboardType="number-pad"
-          onChangeText={setFats}
+          onChangeText={setFat}
         />
         <Text style={styles.text}>Sugar:</Text>
         <TextInput

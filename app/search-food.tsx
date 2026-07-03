@@ -35,10 +35,7 @@ export default function SearchFood() {
       const response = await fetch(`http://192.168.1.5:3000/food/${string}`);
 
       const data = await response.json();
-      if (!data) {
-        setError("No data received");
-        console.log(error);
-      }
+
       console.log("DATA:", data);
       setSearchFood(data);
     } catch (err) {

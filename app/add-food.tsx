@@ -63,9 +63,9 @@ export default function addFood() {
         </Text>
         <Text style={styles.textContent}>
           Fats{" "}
-          {foodData.fats === "Unknown"
+          {foodData.fat === "Unknown"
             ? "0"
-            : (foodData.fats * (Number(grams) / 100)).toFixed(1)}
+            : (foodData.fat * (Number(grams) / 100)).toFixed(1)}
         </Text>
         <Text style={styles.textContent}>
           Salt{" "}

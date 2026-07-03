@@ -37,6 +37,9 @@ export default function Recipe() {
   const router = useRouter();
 
   useEffect(() => {
+    if (search.length <= 0) {
+      return;
+    }
     const timeoutId = setTimeout(() => {
       searchMultipleRecipes(search, TEMP_USER_ID);
     }, 500);
