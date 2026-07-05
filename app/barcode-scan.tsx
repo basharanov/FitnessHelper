@@ -1,3 +1,4 @@
+import { getFetch } from "@/fetchHelper/baseFetch";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRootNavigationState, useRouter } from "expo-router";
 import { useRef, useState } from "react";
@@ -32,11 +33,9 @@ export default function BarcodeScan() {
   async function searchFood(string: string) {
     try {
       setError("");
-      const response = await fetch(
-        `http://192.168.1.5:3000/products/barcode/${string}`,
-      );
 
-      const data = await response.json();
+      const data = await getFetch(`/products/barcode/${string}`);
+
       console.log("DATA:", data);
       return data;
     } catch (err) {

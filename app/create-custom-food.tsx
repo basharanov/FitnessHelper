@@ -9,6 +9,7 @@ import {
   Text,
   TextInput,
 } from "react-native";
+import { postFetch } from "@/fetchHelper/baseFetch";
 
 const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
 
@@ -29,26 +30,20 @@ export default function CreateCustomFood() {
   async function createCustomFood(userId: string) {
     try {
       setError("");
-      const response = await fetch(`http://192.168.1.5:3000/custom-food`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          kcal: kcal,
-          protein: protein,
-          carbs: carbs,
-          fat: fat,
-          sugar: sugar,
-          salt: salt,
-          grams: grams,
-          description: description,
-          userId: userId,
-        }),
+
+      const data = await postFetch(`/custom-food`, {
+        name: name,
+        kcal: kcal,
+        protein: protein,
+        carbs: carbs,
+        fat: fat,
+        sugar: sugar,
+        salt: salt,
+        grams: grams,
+        description: description,
       });
 
-      if (!response.ok) {
+      if (!data.ok) {
         setError("Something went wrong");
         return;
       }

@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
 import SearchItem from "../components/SearchItem";
-import { useScannedFood } from "../context/ScannedFoodContext";
+import { getFetch } from "../fetchHelper/baseFetch";
 
 type Food = {
   id: number | string;
@@ -30,11 +30,9 @@ export default function SearchFood() {
       if (string.length <= 2) {
         return;
       }
-
       setError("");
-      const response = await fetch(`http://192.168.1.5:3000/food/${string}`);
 
-      const data = await response.json();
+      const data = await getFetch(`/food/${string}`);
 
       console.log("DATA:", data);
       setSearchFood(data);

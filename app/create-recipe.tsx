@@ -1,3 +1,4 @@
+import { getFetch, postFetch } from "@/fetchHelper/baseFetch";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -11,8 +12,6 @@ import {
   View,
 } from "react-native";
 import SearchItem from "../components/SearchItem";
-
-const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
 
 class Ingredient {
   id: string;
@@ -62,25 +61,14 @@ export default function CreteRecipe() {
 
   const router = useRouter();
 
-  async function createRecipe(userId: string) {
+  async function createRecipe() {
     try {
-      const recipeIngredients = ingredients.map((ingredient) => ({
-        foodId: ingredient.id,
-        grams: Number(ingredient.grams),
-      }));
-      const response = await fetch(`http://192.168.1.5:3000/recipe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: name,
-          description: description,
-          userId: userId,
-          portions: parseInt(portion),
-          timeMinutes: parseInt(time),
-          ingredients: ingredients,
-        }),
+      const data = await postFetch(`/recipe`, {
+        name: name,
+        description: description,
+        portions: parseInt(portion),
+        timeMinutes: parseInt(time),
+        ingredients: ingredients,
       });
     } catch (error) {
       console.log("Failed fetching the recipe");
@@ -92,10 +80,7 @@ export default function CreteRecipe() {
       if (name.length <= 2) {
         return setSearchIngredients([]);
       }
-      const response = await fetch(`http://192.168.1.5:3000/food/${name}`);
-
-      const data = await response.json();
-
+      const data = await getFetch(`/food/${name}`);
       console.log("Data: ", data);
       setSearchIngredients(data);
     } catch (error) {
@@ -191,7 +176,7 @@ export default function CreteRecipe() {
         <Button
           title="Crete Recipe"
           onPress={() => {
-            createRecipe(TEMP_USER_ID);
+            createRecipe();
             router.back();
           }}
         ></Button>

@@ -1,3 +1,4 @@
+import { getFetch } from "@/fetchHelper/baseFetch";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
@@ -41,11 +42,9 @@ export default function CustomFood() {
   async function searchMultipleCustomFoods(name: string, userId: string) {
     try {
       setError("");
-      const response = await fetch(
-        `http://192.168.1.5:3000/custom-food/${name}?userId=${userId}`,
-      );
 
-      const data = await response.json();
+      const data = await getFetch(`/custom-food/${name}?userId=${userId}`);
+
       if (!data) {
         setError("No data received");
         console.log(error);

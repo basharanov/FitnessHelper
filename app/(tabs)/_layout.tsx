@@ -1,5 +1,5 @@
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 
 export default function TabsLayout() {
@@ -49,6 +49,19 @@ export default function TabsLayout() {
                 name={"barbell"}
                 color={focused ? "green" : "white"}
                 size={24}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused, color }) => (
+              <AntDesign
+                name="profile"
+                size={24}
+                color={focused ? "green" : "white"}
               />
             ),
           }}

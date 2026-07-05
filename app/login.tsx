@@ -1,13 +1,11 @@
-import { Text, View, Button, TextInput } from "react-native";
-import { Link, useRouter } from "expo-router";
-import { useContext } from "react";
-import { useAuthStore } from "../context/authStore";
-import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { LoginSchema } from "../validation/authSchemas";
+import { useRouter } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
+import { Button, Text, TextInput, View } from "react-native";
+import { useAuthStore } from "../context/authStore";
+import { postFetch } from "../fetchHelper/baseFetch";
 import { saveToken } from "../service/authToken";
-
-const API_URL = "http://192.168.1.5:3000";
+import { LoginSchema } from "../validation/authSchemas";
 
 export default function Login() {
   const { logIn } = useAuthStore();
@@ -21,21 +19,10 @@ export default function Login() {
   });
   async function login(email: string, password: string) {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+      const data = await postFetch(`/auth/login`, {
+        email,
+        password,
       });
-      const data = await response.json();
-      if (!response.ok) {
-        console.log("Login failed:", data.message);
-        return;
-      }
 
       await saveToken(data.token);
 

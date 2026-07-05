@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
 import SearchItem from "../components/SearchItem";
+import { getFetch } from "../fetchHelper/baseFetch";
 
 const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
 
@@ -50,11 +51,9 @@ export default function Recipe() {
   async function searchMultipleRecipes(name: string, userId: string) {
     try {
       setError("");
-      const response = await fetch(
-        `http://192.168.1.5:3000/recipe/${name}?userId=${userId}`,
-      );
 
-      const data = await response.json();
+      const data = await getFetch(`/recipe/${name}?userId=${userId}`);
+
       if (!data) {
         setError("No data received");
         console.log(error);
