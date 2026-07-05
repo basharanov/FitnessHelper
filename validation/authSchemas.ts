@@ -19,5 +19,10 @@ export const RegisterSchema = object({
     .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
   birthDate: date().required("Birth date is required"),
-  weight: string().required("Weight is required"),
+  username: string()
+    .min(2, "Password must be at least 8 characters")
+    .required("Password is required"),
+  height: string().required("Height is required"),
+  currentWeight: string().required("Current weight is required"),
+  goalWeight: string().required("Goal weight is required"),
 });

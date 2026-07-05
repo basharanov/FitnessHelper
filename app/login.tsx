@@ -23,9 +23,10 @@ export default function Login() {
         email,
         password,
       });
-
+      if (data.token === undefined) {
+        return;
+      }
       await saveToken(data.token);
-
       console.log("Login successful:", data.message);
       logIn();
     } catch (error) {

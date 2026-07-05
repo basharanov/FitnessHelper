@@ -1,3 +1,4 @@
+import { postFetch } from "@/fetchHelper/baseFetch";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
@@ -5,8 +6,6 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Platform, Text, TextInput, View } from "react-native";
 import { RegisterSchema } from "../validation/authSchemas";
-
-const API_URL = "http://192.168.1.5:3000";
 
 export default function Register() {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -19,31 +18,15 @@ export default function Register() {
     resolver: yupResolver(RegisterSchema),
   });
 
-  async function register(
-    email: string,
-    password: string,
-    birthDate: Date,
-    weight: number,
-  ) {
+  async function register(body: object) {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          birthDate: birthDate,
-          weight: weight,
-        }),
-      });
-      const responseData = await response.json();
+      console.log(body);
+      const data = await postFetch(`/auth/register`, body);
 
-      console.log("Register status:", response.status);
-      console.log("Register response:", responseData);
+      console.log("Register status:", data.status);
+      console.log("Register response:", data);
 
-      if (!response.ok) {
+      if (!data.ok) {
         return;
       }
     } catch (error) {
@@ -52,7 +35,15 @@ export default function Register() {
   }
 
   const onSubmit = (data: any) => {
-    register(data.email, data.password, data.birthDate, data.weight);
+    register({
+      email: data.email,
+      password: data.password,
+      name: data.username,
+      birthDate: data.birthDate,
+      height: data.height,
+      currentWeight: data.currentWeight,
+      goalWeight: data.goalWeight,
+    });
     router.replace("/login");
   };
 
@@ -78,6 +69,14 @@ export default function Register() {
         name="password"
         render={({ field: { onChange, value } }) => (
           <TextInput secureTextEntry onChangeText={onChange} value={value} />
+        )}
+      />
+      <Text>Username:</Text>
+      <Controller
+        control={control}
+        name="username"
+        render={({ field: { onChange, value } }) => (
+          <TextInput onChangeText={onChange} value={value} />
         )}
       />
       <Text>Date:</Text>
@@ -111,10 +110,10 @@ export default function Register() {
           </View>
         )}
       />
-      <Text>Weigth:</Text>
+      <Text>Height:</Text>
       <Controller
         control={control}
-        name="weight"
+        name="height"
         render={({ field: { onChange, value } }) => (
           <TextInput
             onChangeText={(text) => {
@@ -125,7 +124,43 @@ export default function Register() {
             }}
             keyboardType="decimal-pad"
             value={value}
-            placeholder="Example: 75.5"
+            placeholder="Example: 182 cm"
+          />
+        )}
+      />
+      <Text>Current weigth:</Text>
+      <Controller
+        control={control}
+        name="currentWeight"
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            onChangeText={(text) => {
+              const returnVaL = Number(text);
+              if (!Number.isNaN(returnVaL)) {
+                onChange(returnVaL);
+              }
+            }}
+            keyboardType="decimal-pad"
+            value={value}
+            placeholder="Example: 75.5 kg"
+          />
+        )}
+      />
+      <Text>Goal Weight:</Text>
+      <Controller
+        control={control}
+        name="goalWeight"
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            onChangeText={(text) => {
+              const returnVaL = Number(text);
+              if (!Number.isNaN(returnVaL)) {
+                onChange(returnVaL);
+              }
+            }}
+            keyboardType="decimal-pad"
+            value={value}
+            placeholder="Example: 74 kg"
           />
         )}
       />
