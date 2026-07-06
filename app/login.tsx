@@ -4,7 +4,6 @@ import { Controller, useForm } from "react-hook-form";
 import { Button, Text, TextInput, View } from "react-native";
 import { useAuthStore } from "../context/authStore";
 import { postFetch } from "../fetchHelper/baseFetch";
-import { saveToken } from "../service/authToken";
 import { LoginSchema } from "../validation/authSchemas";
 
 export default function Login() {
@@ -23,12 +22,20 @@ export default function Login() {
         email,
         password,
       });
+
       if (data.token === undefined) {
         return;
       }
-      await saveToken(data.token);
+
+      logIn(data.token, {
+        email: data.email,
+        name: data.name,
+        birthDate: data.birthDate,
+        height: data.height,
+        currentWeight: data.currentWeight,
+        goalWeight: data.goalWeight,
+      });
       console.log("Login successful:", data.message);
-      logIn();
     } catch (error) {
       console.log("Failed to log in", error);
     }

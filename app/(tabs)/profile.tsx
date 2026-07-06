@@ -1,10 +1,10 @@
-import { useAuthStore } from "../../context/authStore";
 import { useRouter } from "expo-router";
 import { Button, Text, View } from "react-native";
+import { useAuthStore } from "../../context/authStore";
 import { deleteToken } from "../../service/authToken";
 
 export default function Profile() {
-  const { logOut } = useAuthStore();
+  const { logOut, user } = useAuthStore();
 
   const router = useRouter();
 
@@ -26,7 +26,13 @@ export default function Profile() {
         alignItems: "center",
       }}
     >
-      <Text>Profile Screen</Text>
+      <Text>Profile:</Text>
+      <Text>Username: {user.name}</Text>
+      <Text>Email: {user.email}</Text>
+      <Text>Birth date: {user.birthDate.toString()}</Text>
+      <Text>Height: {user.height}</Text>
+      <Text>Current weight: {user.currentWeight}</Text>
+      <Text>Goal weight: {user.goalWeight}</Text>
       <Button title="Logout" onPress={onSubmit}></Button>
     </View>
   );
