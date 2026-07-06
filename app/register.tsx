@@ -92,7 +92,7 @@ export default function Register() {
 
             {showDatePicker && (
               <DateTimePicker
-                value={new Date()}
+                value={value}
                 mode="date"
                 display="default"
                 maximumDate={new Date()}
@@ -100,7 +100,6 @@ export default function Register() {
                   if (Platform.OS === "android") {
                     setShowDatePicker(false);
                   }
-
                   if (selectedDate) {
                     onChange(selectedDate);
                   }
