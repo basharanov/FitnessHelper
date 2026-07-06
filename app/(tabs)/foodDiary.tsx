@@ -1,6 +1,14 @@
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Button, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  FlatList,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import FoodCard from "../../components/FoodCard";
 import ProgressCircle from "../../components/ProgressCircle";
 import useScannedFoodContext, {
@@ -14,13 +22,17 @@ export default function FoodDiaryScreen() {
   const [targetFat, onChangeTargetFat] = React.useState(70);
   const [foodName, onChangeFoodName] = React.useState("");
   const [foodData, setFoodData] = useState<FoodData | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [date, setDate] = useState(new Date(1598051730000));
 
   const router = useRouter();
   const params = useLocalSearchParams<{ data?: string }>();
   const { savedFood, calculateTotalValues } = useScannedFoodContext();
 
   const totalValues = calculateTotalValues();
-
+  const showDate = () => {
+    setShowDatePicker(true);
+  };
   const displayProcent = (
     value: number | string | undefined,
     target: number,
@@ -32,6 +44,24 @@ export default function FoodDiaryScreen() {
 
   return (
     <View style={styles.container}>
+      <View>
+        <Button title={`Pick Date:`} onPress={showDate} />
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            maximumDate={new Date()}
+            onChange={(event, selectedDate) => {
+              if (Platform.OS === "android") {
+                setShowDatePicker(false);
+              }
+              if (selectedDate) {
+                setDate(selectedDate);
+              }
+            }}
+          />
+        )}
+      </View>
       <View style={styles.summaryBox}>
         <View style={styles.macroItem}>
           <ProgressCircle

@@ -5,7 +5,6 @@ import { deleteToken } from "../../service/authToken";
 
 export default function Profile() {
   const { logOut, user } = useAuthStore();
-
   const router = useRouter();
 
   async function logout() {

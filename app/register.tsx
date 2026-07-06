@@ -103,6 +103,9 @@ export default function Register() {
                   if (selectedDate) {
                     onChange(selectedDate);
                   }
+                  if (event.type === "dismissed") {
+                    setShowDatePicker(false);
+                  }
                 }}
               />
             )}
