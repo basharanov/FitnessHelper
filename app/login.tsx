@@ -1,9 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { useAuthStore } from "../context/authStore";
-import { postFetch } from "../fetchHelper/baseFetch";
+import { postLoginFetch } from "../fetchHelper/baseFetch";
 import { LoginSchema } from "../validation/authSchemas";
 
 export default function Login() {
@@ -18,7 +18,7 @@ export default function Login() {
   });
   async function login(email: string, password: string) {
     try {
-      const data = await postFetch(`/auth/login`, {
+      const data = await postLoginFetch(`/auth/login`, {
         email,
         password,
       });
@@ -58,7 +58,11 @@ export default function Login() {
         control={control}
         name="email"
         render={({ field: { onChange, value } }) => (
-          <TextInput onChangeText={onChange} value={value} />
+          <TextInput
+            style={styles.textContent}
+            onChangeText={onChange}
+            value={value}
+          />
         )}
       />
       <Text>Password:</Text>
@@ -66,7 +70,12 @@ export default function Login() {
         control={control}
         name="password"
         render={({ field: { onChange, value } }) => (
-          <TextInput secureTextEntry onChangeText={onChange} value={value} />
+          <TextInput
+            style={styles.textContent}
+            secureTextEntry
+            onChangeText={onChange}
+            value={value}
+          />
         )}
       />
 
@@ -76,3 +85,14 @@ export default function Login() {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  textContent: {
+    fontSize: 20,
+    color: "#0f0505",
+    borderWidth: 1,
+    borderColor: "#0c0b0b",
+    marginBottom: 16,
+    paddingVertical: 8,
+    width: 250,
+  },
+});

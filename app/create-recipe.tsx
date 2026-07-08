@@ -11,18 +11,21 @@ import {
   TextInput,
   View,
 } from "react-native";
+import RecipeIngredientItem from "../components/RecipeIngredientItem";
 import SearchItem from "../components/SearchItem";
 
 class Ingredient {
   id: string;
   name: string;
   grams: number;
+  baseGrams?: number;
   kcal: number;
   protein: number;
   carbs: number;
   fat: number;
   sugar: number;
   salt: number;
+
   constructor(
     id: string,
     name: string,
@@ -33,10 +36,12 @@ class Ingredient {
     fat: number,
     sugar: number,
     salt: number,
+    baseGrams?: number,
   ) {
     this.id = id;
     this.name = name;
     this.grams = grams;
+    this.baseGrams = baseGrams;
     this.kcal = kcal;
     this.protein = protein;
     this.carbs = carbs;
@@ -99,6 +104,19 @@ export default function CreteRecipe() {
 
     return value;
   }
+  function changeIngredientGrams(id: string, grams: number) {
+    setIngredients((prevIngredients) =>
+      prevIngredients.map((ingredient) =>
+        ingredient.id === id ? { ...ingredient, grams } : ingredient,
+      ),
+    );
+  }
+
+  function removeIngredient(id: string) {
+    setIngredients((prevIngredients) =>
+      prevIngredients.filter((ingredient) => ingredient.id !== id),
+    );
+  }
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -144,11 +162,21 @@ export default function CreteRecipe() {
           onChangeText={setDescription}
         ></TextInput>
         <Text style={styles.text}>Ingredients: </Text>
-        {ingredients.map((item, index) => {
+
+        {ingredients.map((item) => {
           return (
-            <Text key={`${item.id}-${index}`} style={styles.smallText}>
-              {item.name}
-            </Text>
+            <RecipeIngredientItem
+              key={item.id}
+              ingredient={{
+                id: item.id,
+                name: item.name,
+                grams: item.grams,
+                baseGrams: item.baseGrams ?? item.grams,
+                kcal: item.kcal,
+              }}
+              onChangeGrams={changeIngredientGrams}
+              onRemove={removeIngredient}
+            />
           );
         })}
         <TextInput
@@ -166,8 +194,17 @@ export default function CreteRecipe() {
                   setSelectedIngredient(item);
                   setSelectedIngredientId(item.id);
                   if (checkForDuplicatesIngredient(item.id)) {
-                    setIngredients((ingredient) => [...ingredients, item]);
+                    const ingredientToAdd = {
+                      ...item,
+                      baseGrams: item.grams,
+                    };
+
+                    setIngredients((prevIngredients) => [
+                      ...prevIngredients,
+                      ingredientToAdd,
+                    ]);
                   }
+                  setSearch("");
                 }}
               />
             </View>

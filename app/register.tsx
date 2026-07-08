@@ -4,7 +4,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Platform, Text, TextInput, View } from "react-native";
+import {
+  Button,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { RegisterSchema } from "../validation/authSchemas";
 
 export default function Register() {
@@ -60,7 +67,11 @@ export default function Register() {
         control={control}
         name="email"
         render={({ field: { onChange, value } }) => (
-          <TextInput onChangeText={onChange} value={value} />
+          <TextInput
+            style={styles.textContent}
+            onChangeText={onChange}
+            value={value}
+          />
         )}
       />
       <Text>Password:</Text>
@@ -68,7 +79,12 @@ export default function Register() {
         control={control}
         name="password"
         render={({ field: { onChange, value } }) => (
-          <TextInput secureTextEntry onChangeText={onChange} value={value} />
+          <TextInput
+            style={styles.textContent}
+            secureTextEntry
+            onChangeText={onChange}
+            value={value}
+          />
         )}
       />
       <Text>Username:</Text>
@@ -76,7 +92,11 @@ export default function Register() {
         control={control}
         name="username"
         render={({ field: { onChange, value } }) => (
-          <TextInput onChangeText={onChange} value={value} />
+          <TextInput
+            style={styles.textContent}
+            onChangeText={onChange}
+            value={value}
+          />
         )}
       />
       <Text>Date:</Text>
@@ -127,6 +147,7 @@ export default function Register() {
             keyboardType="decimal-pad"
             value={value}
             placeholder="Example: 182 cm"
+            style={styles.textContent}
           />
         )}
       />
@@ -145,6 +166,7 @@ export default function Register() {
             keyboardType="decimal-pad"
             value={value}
             placeholder="Example: 75.5 kg"
+            style={styles.textContent}
           />
         )}
       />
@@ -163,6 +185,7 @@ export default function Register() {
             keyboardType="decimal-pad"
             value={value}
             placeholder="Example: 74 kg"
+            style={styles.textContent}
           />
         )}
       />
@@ -177,3 +200,15 @@ export default function Register() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  textContent: {
+    fontSize: 20,
+    color: "#0f0505",
+    borderWidth: 1,
+    borderColor: "#0c0b0b",
+    marginBottom: 16,
+    paddingVertical: 8,
+    width: 250,
+  },
+});
