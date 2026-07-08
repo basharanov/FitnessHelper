@@ -5,6 +5,18 @@ import { useRef, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { useScannedFood } from "../context/ScannedFoodContext";
 
+type barcodeData = {
+  barcode: string;
+  name: string;
+  grams: number;
+  kcal: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  sugar: number;
+  salt: number;
+};
+
 export default function BarcodeScan() {
   const [error, setError] = useState("");
   const [scanned, setScanned] = useState(false);
@@ -44,6 +56,20 @@ export default function BarcodeScan() {
     }
   }
 
+  function validateBarcodeData(data: barcodeData) {
+    if (
+      data.kcal === null ||
+      data.protein === null ||
+      data.carbs === null ||
+      data.fat === null ||
+      data.sugar === null ||
+      data.salt === null
+    ) {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <View style={styles.container}>
       <CameraView
@@ -66,6 +92,14 @@ export default function BarcodeScan() {
                 if (!barcodeData) {
                   isProcessingRef.current = false;
                   setScanned(false);
+                  return;
+                }
+
+                if (!validateBarcodeData(barcodeData)) {
+                  router.replace({
+                    pathname: "/create-barcode-item",
+                    params: { foodData: JSON.stringify(barcodeData) },
+                  });
                   return;
                 }
 

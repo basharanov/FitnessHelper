@@ -2,12 +2,23 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { useScannedFood } from "../context/ScannedFoodContext";
+import { postFetch } from "@/fetchHelper/baseFetch";
 
 export default function addFood() {
   const [grams, setGrams] = useState("100");
+  const [gramsInNumber, setGramsInNumber] = useState(100);
   const [gramsError, setGramsError] = useState("");
   const { addFood } = useScannedFood();
-
+  const createLog = () => {
+    // date, mealType, sourceType, foodId, grams
+    const response = postFetch("/food-logs", {
+      date: " ",
+      mealType: " ",
+      sourceType: " ",
+      foodId: " ",
+      grams: gramsInNumber,
+    });
+  };
   const handleGramsChange = (text: string) => {
     const isOnlyNumbers = /^[0-9]*$/.test(text);
 
@@ -18,12 +29,15 @@ export default function addFood() {
     }
     setGramsError("");
     setGrams(text);
+    setGramsInNumber(Number(text));
   };
   const router = useRouter();
   const { foodD } = useLocalSearchParams<{
     foodD: string;
   }>();
+
   const foodData = JSON.parse(foodD);
+
   return (
     <View style={styles.container}>
       <View style={styles.foodNameView}>
@@ -47,37 +61,37 @@ export default function addFood() {
           Calories{" "}
           {foodData.kcal === "Unknown"
             ? "0"
-            : (foodData.kcal * (Number(grams) / 100)).toFixed(2)}
+            : (foodData.kcal * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
           Protein{" "}
           {foodData.protein === "Unknown"
             ? "0"
-            : (foodData.protein * (Number(grams) / 100)).toFixed(2)}
+            : (foodData.protein * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
           Carbs{" "}
           {foodData.carbs === "Unknown"
             ? "0"
-            : (foodData.carbs * (Number(grams) / 100)).toFixed(2)}
+            : (foodData.carbs * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
           Fats{" "}
           {foodData.fat === "Unknown"
             ? "0"
-            : (foodData.fat * (Number(grams) / 100)).toFixed(1)}
+            : (foodData.fat * (gramsInNumber / 100)).toFixed(1)}
         </Text>
         <Text style={styles.textContent}>
           Salt{" "}
           {foodData.salt === "Unknown"
             ? "0"
-            : (foodData.salt * (Number(grams) / 100)).toFixed(2)}
+            : (foodData.salt * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
           Sugar{" "}
           {foodData.sugar === "Unknown"
             ? "0"
-            : (foodData.sugar * (Number(grams) / 100)).toFixed(1)}
+            : (foodData.sugar * (gramsInNumber / 100)).toFixed(1)}
         </Text>
       </View>
       <View style={styles.buttonView}>

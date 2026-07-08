@@ -83,9 +83,6 @@ export default function CustomFood() {
         onPress={() => {
           router.replace({
             pathname: "/create-custom-food",
-            params: {
-              foodD: JSON.stringify(selectedCustomFoodData),
-            },
           });
         }}
       ></Button>

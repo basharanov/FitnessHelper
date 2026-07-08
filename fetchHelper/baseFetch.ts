@@ -1,7 +1,7 @@
 import { getToken } from "../service/authToken";
 
 //TODO: add url in .env and import it from there
-const baseUrl = "http://192.168.1.100:3000";
+const baseUrl = "http://192.168.1.5:3000";
 
 export async function getFetch(route: string) {
   const token = await getToken();
@@ -29,7 +29,7 @@ export async function postFetch(route: string, body: object) {
   });
 
   const data = await response.json();
-
+  console.log("PostFetch: ", data);
   return data;
 }
 
