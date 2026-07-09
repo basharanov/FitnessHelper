@@ -1,3 +1,4 @@
+import { postFetch } from "@/fetchHelper/baseFetch";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -9,9 +10,6 @@ import {
   Text,
   TextInput,
 } from "react-native";
-import { postFetch } from "@/fetchHelper/baseFetch";
-
-const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
 
 export default function CreateCustomFood() {
   const [error, setError] = useState("");
@@ -27,7 +25,7 @@ export default function CreateCustomFood() {
 
   const router = useRouter();
 
-  async function createCustomFood(userId: string) {
+  async function createCustomFood() {
     try {
       setError("");
 
@@ -128,7 +126,7 @@ export default function CreateCustomFood() {
         <Button
           title="Create custom food"
           onPress={() => {
-            createCustomFood(TEMP_USER_ID);
+            createCustomFood();
             router.back();
           }}
         />

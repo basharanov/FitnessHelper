@@ -1,21 +1,22 @@
+import { postFetch } from "@/fetchHelper/baseFetch";
+import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { useScannedFood } from "../context/ScannedFoodContext";
-import { postFetch } from "@/fetchHelper/baseFetch";
 
 export default function addFood() {
   const [grams, setGrams] = useState("100");
   const [gramsInNumber, setGramsInNumber] = useState(100);
   const [gramsError, setGramsError] = useState("");
+  const [mealType, setMealType] = useState("brakfast");
   const { addFood } = useScannedFood();
   const createLog = () => {
-    // date, mealType, sourceType, foodId, grams
     const response = postFetch("/food-logs", {
-      date: " ",
-      mealType: " ",
-      sourceType: " ",
-      foodId: " ",
+      loggedAt: new Date(),
+      mealType: mealType,
+      sourceType: foodData.sourceType,
+      foodId: foodData.id,
       grams: gramsInNumber,
     });
   };
@@ -58,41 +59,36 @@ export default function addFood() {
       </View>
       <View style={styles.nurtritionView}>
         <Text style={styles.textContent}>
-          Calories{" "}
-          {foodData.kcal === "Unknown"
-            ? "0"
-            : (foodData.kcal * (gramsInNumber / 100)).toFixed(2)}
+          Calories {(foodData.kcal * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
-          Protein{" "}
-          {foodData.protein === "Unknown"
-            ? "0"
-            : (foodData.protein * (gramsInNumber / 100)).toFixed(2)}
+          Protein {(foodData.protein * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
-          Carbs{" "}
-          {foodData.carbs === "Unknown"
-            ? "0"
-            : (foodData.carbs * (gramsInNumber / 100)).toFixed(2)}
+          Carbs {(foodData.carbs * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
-          Fats{" "}
-          {foodData.fat === "Unknown"
-            ? "0"
-            : (foodData.fat * (gramsInNumber / 100)).toFixed(1)}
+          Fats {(foodData.fat * (gramsInNumber / 100)).toFixed(1)}
         </Text>
         <Text style={styles.textContent}>
-          Salt{" "}
-          {foodData.salt === "Unknown"
-            ? "0"
-            : (foodData.salt * (gramsInNumber / 100)).toFixed(2)}
+          Salt {(foodData.salt * (gramsInNumber / 100)).toFixed(2)}
         </Text>
         <Text style={styles.textContent}>
-          Sugar{" "}
-          {foodData.sugar === "Unknown"
-            ? "0"
-            : (foodData.sugar * (gramsInNumber / 100)).toFixed(1)}
+          Sugar {(foodData.sugar * (gramsInNumber / 100)).toFixed(1)}
         </Text>
+        <View style={styles.pickerContainer}>
+          <Text style={styles.textContent}>Choose meal type:</Text>
+          <Picker
+            selectedValue={mealType}
+            onValueChange={(value) => setMealType(value)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Breakfast" value={"breakfast"} color="white" />
+            <Picker.Item label="Lunch" value={"lunch"} />
+            <Picker.Item label="Dinner" value={"dinner"} />
+            <Picker.Item label="Snak" value={"snak"} />
+          </Picker>
+        </View>
       </View>
       <View style={styles.buttonView}>
         <Button
@@ -139,5 +135,25 @@ const styles = StyleSheet.create({
   buttonView: {
     textAlign: "center",
     marginBottom: 20,
+  },
+  pickerContainer: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#374151",
+    overflow: "hidden",
+    marginVertical: 10,
+  },
+
+  picker: {
+    color: "white",
+    height: 180,
+    fontSize: 18,
+    paddingHorizontal: 30,
+  },
+
+  pickerItem: {
+    color: "white",
+    fontSize: 18,
+    height: 20,
   },
 });

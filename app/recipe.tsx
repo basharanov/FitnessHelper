@@ -4,8 +4,6 @@ import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
 import SearchItem from "../components/SearchItem";
 import { getFetch } from "../fetchHelper/baseFetch";
 
-const TEMP_USER_ID = "019edf77-9e38-7505-971d-7491dcef003b";
-
 type IngrediеntItems = {
   foodId: string;
   grams: number | string;
@@ -42,17 +40,17 @@ export default function Recipe() {
       return;
     }
     const timeoutId = setTimeout(() => {
-      searchMultipleRecipes(search, TEMP_USER_ID);
+      searchMultipleRecipes(search);
     }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [search]);
 
-  async function searchMultipleRecipes(name: string, userId: string) {
+  async function searchMultipleRecipes(name: string) {
     try {
       setError("");
 
-      const data = await getFetch(`/recipe/${name}?userId=${userId}`);
+      const data = await getFetch(`/recipe/${name}`);
 
       if (!data) {
         setError("No data received");

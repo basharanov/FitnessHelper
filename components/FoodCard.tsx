@@ -14,15 +14,6 @@ export default function FoodCard({ food, onDelete }: FoodCardProps) {
 
   const gramsNumber = Number(grams.replace(",", ".")) || 0;
 
-  const calculateValue = (value: number | string) => {
-    if (value === "Unknown") {
-      return value;
-    }
-
-    const result = (Number(value) * gramsNumber) / 100;
-    return Number(result.toFixed(1));
-  };
-
   return (
     <View style={styles.card}>
       <Image source={foodCardPicture} style={styles.image} />
@@ -37,19 +28,21 @@ export default function FoodCard({ food, onDelete }: FoodCardProps) {
           }}
         >
           <Text style={styles.nutrientText}>
-            Calories: {calculateValue(food.kcal)} kcal,
+            Calories: {((Number(food.kcal) * gramsNumber) / 100).toFixed(1)}{" "}
+            kcal,
           </Text>
           <Text style={styles.nutrientText}>
-            Protein: {calculateValue(food.protein)} g,
+            Protein: {((Number(food.protein) * gramsNumber) / 100).toFixed(1)}{" "}
+            g,
           </Text>
           <Text style={styles.nutrientText}>
-            Carbs: {calculateValue(food.carbs)} g,
+            Carbs: {((Number(food.carbs) * gramsNumber) / 100).toFixed(1)} g,
           </Text>
           <Text style={styles.nutrientText}>
-            Fats: {calculateValue(food.fat)} g
+            Fats: {((Number(food.fat) * gramsNumber) / 100).toFixed(1)} g
           </Text>
           <Text style={styles.nutrientText}>
-            Grams: {calculateValue(food.grams)} g
+            Grams: {((Number(food.grams) * gramsNumber) / 100).toFixed(1)} g
           </Text>
         </View>
       </View>
