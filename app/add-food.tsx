@@ -3,22 +3,18 @@ import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { useDateStore } from "../context/dateStore";
 
 export default function addFood() {
   const [grams, setGrams] = useState("100");
   const [gramsInNumber, setGramsInNumber] = useState(100);
   const [gramsError, setGramsError] = useState("");
   const [mealType, setMealType] = useState("breakfast");
+  const selectedDate = useDateStore((state) => state.selectedDate);
 
   const createLog = async () => {
-    const currentDate = new Date();
-
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-    const day = String(currentDate.getDate()).padStart(2, "0");
-
     const response = await postFetch("/food-logs", {
-      date: `${year}-${month}-${day}`,
+      date: selectedDate,
       sourceType: foodData.sourceType,
       mealType: mealType,
       foodId: foodData.id,
@@ -91,7 +87,7 @@ export default function addFood() {
             <Picker.Item label="Breakfast" value={"breakfast"} color="white" />
             <Picker.Item label="Lunch" value={"lunch"} />
             <Picker.Item label="Dinner" value={"dinner"} />
-            <Picker.Item label="Snak" value={"snak"} />
+            <Picker.Item label="Snack" value={"snack"} />
           </Picker>
         </View>
       </View>

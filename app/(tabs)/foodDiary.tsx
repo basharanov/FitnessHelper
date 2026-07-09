@@ -1,6 +1,7 @@
+import { getFetch } from "@/fetchHelper/baseFetch";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FlatList,
@@ -14,6 +15,7 @@ import ProgressCircle from "../../components/ProgressCircle";
 import useScannedFoodContext, {
   FoodData,
 } from "../../context/ScannedFoodContext";
+import { useDateStore } from "../../context/dateStore";
 
 export default function FoodDiaryScreen() {
   const [targetCalories, onChangeTargetCalories] = React.useState(2000);
@@ -23,11 +25,13 @@ export default function FoodDiaryScreen() {
   const [foodName, onChangeFoodName] = React.useState("");
   const [foodData, setFoodData] = useState<FoodData | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [date, setDate] = useState(new Date(1598051730000));
 
   const router = useRouter();
   const params = useLocalSearchParams<{ data?: string }>();
   const { savedFood, calculateTotalValues } = useScannedFoodContext();
+  const [logs, setLogs] = useState<any[]>([]);
+  const { selectedDate, setSelectedDate } = useDateStore();
+  const [date, setDate] = useState(new Date(selectedDate));
 
   const totalValues = calculateTotalValues();
   const showDate = () => {
@@ -41,6 +45,33 @@ export default function FoodDiaryScreen() {
     if (typeof value === "undefined") return 0;
     return Math.round((value / target) * 100);
   };
+
+  const formatDateForBackend = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
+  async function getFoodLogsByDate() {
+    try {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      const formattedDate = `${year}-${month}-${day}`;
+      const data = await getFetch(`/food-logs/${formattedDate}`);
+
+      setLogs(data.logs);
+    } catch (error) {
+      console.log("Failed fetching food logs:", error);
+    }
+  }
+
+  useEffect(() => {
+    getFoodLogsByDate();
+  }, [selectedDate]);
 
   return (
     <View style={styles.container}>
@@ -57,6 +88,8 @@ export default function FoodDiaryScreen() {
               }
               if (selectedDate) {
                 setDate(selectedDate);
+                const formatertedDate = formatDateForBackend(selectedDate);
+                setSelectedDate(formatertedDate);
               }
             }}
           />
@@ -122,9 +155,9 @@ export default function FoodDiaryScreen() {
       ></Button>
 
       <FlatList
-        data={savedFood}
+        data={logs}
         renderItem={({ item }) => <FoodCard food={item} onDelete={() => {}} />}
-        keyExtractor={(item) => item?.id.toString()}
+        keyExtractor={(item, index) => `${item?.id.toString()}-${index}`}
       />
     </View>
   );
