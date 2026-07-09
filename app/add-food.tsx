@@ -3,19 +3,24 @@ import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { useScannedFood } from "../context/ScannedFoodContext";
 
 export default function addFood() {
   const [grams, setGrams] = useState("100");
   const [gramsInNumber, setGramsInNumber] = useState(100);
   const [gramsError, setGramsError] = useState("");
-  const [mealType, setMealType] = useState("brakfast");
-  const { addFood } = useScannedFood();
-  const createLog = () => {
-    const response = postFetch("/food-logs", {
-      loggedAt: new Date(),
-      mealType: mealType,
+  const [mealType, setMealType] = useState("breakfast");
+
+  const createLog = async () => {
+    const currentDate = new Date();
+
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    const response = await postFetch("/food-logs", {
+      date: `${year}-${month}-${day}`,
       sourceType: foodData.sourceType,
+      mealType: mealType,
       foodId: foodData.id,
       grams: gramsInNumber,
     });
@@ -94,8 +99,7 @@ export default function addFood() {
         <Button
           title="Add Food"
           onPress={() => {
-            foodData.grams = Number(grams);
-            addFood(foodData);
+            createLog();
             router.replace("/foodDiary");
           }}
         />
