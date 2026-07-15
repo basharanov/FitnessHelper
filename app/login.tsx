@@ -82,6 +82,11 @@ export default function Login() {
       <Button title="Register" onPress={() => router.replace("/register")} />
 
       <Button title="Login" onPress={handleSubmit(onSubmit)} />
+
+      <Button
+        title="Забравена парола"
+        onPress={() => router.replace("/change-password-email")}
+      />
     </View>
   );
 }

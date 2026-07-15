@@ -76,7 +76,7 @@ export default function FoodDiaryScreen() {
   return (
     <View style={styles.container}>
       <View>
-        <Button title={`Pick Date:`} onPress={showDate} />
+        <Button title={`Pick Date:`} onPress={() => setShowDatePicker(true)} />
         {showDatePicker && (
           <DateTimePicker
             value={date}
