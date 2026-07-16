@@ -22,7 +22,6 @@ export default function Login() {
         email,
         password,
       });
-
       if (data.token === undefined) {
         return;
       }

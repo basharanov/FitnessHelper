@@ -1,9 +1,14 @@
-import { Text, View, StyleSheet } from "react-native";
-
+import { useRouter } from "expo-router";
+import { Button, StyleSheet, Text, View } from "react-native";
 export default function ExerciseDiaryScreen() {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Exercise Screen.</Text>
+      <Button
+        title="Add activity"
+        onPress={() => router.replace("../add-activity")}
+      />
     </View>
   );
 }
