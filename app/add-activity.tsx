@@ -9,7 +9,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import ActivityCard from "../components/activityCard";
+import ActivityCard from "../components/ActivityCard";
+
 type ActivityType = {
   id: string;
   name: string;
@@ -24,13 +25,18 @@ export default function addActivity() {
   const router = useRouter();
 
   const getActivities = async (category: string) => {
-    const activities = await getFetch(
-      `/activity/activity-types?category=${category}`,
-    );
-    if (!activities) {
-      return setActivityTypes([]);
+    try {
+      const activities = await getFetch(
+        `/activity/activity-types?category=${category}`,
+      );
+
+      if (!activities) {
+        return setActivityTypes([]);
+      }
+      setActivityTypes(activities);
+    } catch (error) {
+      console.log("Problem with fetching activity type by category");
     }
-    setActivityTypes(activities);
   };
 
   useEffect(() => {
