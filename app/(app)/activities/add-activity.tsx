@@ -9,7 +9,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import ActivityCard from "../components/ActivityCard";
+import ActivityCard from "@/components/ActivityCard";
 
 type ActivityType = {
   id: string;
@@ -123,7 +123,7 @@ export default function addActivity() {
             activity={item}
             onPress={() => {
               router.push({
-                pathname: "/create-activity",
+                pathname: "/activities/create-activity",
                 params: {
                   activityTypeId: item.id,
                   activityName: item.name.replaceAll("_", " "),

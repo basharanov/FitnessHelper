@@ -1,11 +1,11 @@
+import SearchItem from "@/components/SearchItem";
+import { getFetch } from "@/fetchHelper/baseFetch";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
-import SearchItem from "../components/SearchItem";
-import { getFetch } from "../fetchHelper/baseFetch";
 
-type Food = {
-  id: number | string;
+type CustomFood = {
+  id: string;
   name: string;
   kcal: number | string;
   carbs: number | string;
@@ -14,42 +14,41 @@ type Food = {
   salt: number | string;
   sugar: number | string;
   grams: number | string;
+  description: string;
 };
 
-export default function SearchFood() {
-  const [error, setError] = useState("");
+export default function CustomFood() {
+  const [customFoodData, setCustomFoodData] = useState<CustomFood[]>([]);
   const [search, setSearch] = useState("");
-  const [searchFood, setSearchFood] = useState<Food[]>([]);
-  const [selectedFood, setSelectedFood] = useState<Food>();
-  const [selectedFoodId, setSelectedFoodId] = useState<string | number>();
+  const [selectedCustomFoodData, setSelectedCustomFoodData] =
+    useState<CustomFood>();
+  const [selectedCustomFoodId, setSelectedCustomFoodId] = useState<
+    string | number
+  >();
 
   const router = useRouter();
 
-  async function searchMultipleFoods(string: string) {
-    try {
-      if (string.length <= 2) {
-        return;
-      }
-      setError("");
-
-      const data = await getFetch(`/food/${string}`);
-
-      console.log("DATA:", data);
-      setSearchFood(data);
-    } catch (err) {
-      setError("Failed to fetch");
-      console.log(err);
-    }
-  }
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      searchMultipleFoods(search);
+      searchMultipleCustomFoods(search);
     }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [search]);
 
+  async function searchMultipleCustomFoods(name: string) {
+    if (name.length <= 0 || !name.trim() || name === undefined || !name) {
+      return;
+    }
+
+    try {
+      const data = await getFetch(`/custom-food/${name}`);
+
+      setCustomFoodData(data);
+    } catch (error) {
+      console.log("Failed to get custom foods");
+    }
+  }
   return (
     <View style={styles.container}>
       <TextInput
@@ -57,32 +56,39 @@ export default function SearchFood() {
         value={search}
         onChangeText={setSearch}
       />
-
       <Button
-        title="Add Food"
+        title="Add Custom Food"
         onPress={() => {
-          if (!selectedFood) {
+          if (!selectedCustomFoodData) {
             return;
           }
           router.replace({
-            pathname: "/add-food",
+            pathname: "/food/add-food",
             params: {
-              foodD: JSON.stringify(selectedFood),
+              foodD: JSON.stringify(selectedCustomFoodData),
             },
           });
         }}
       ></Button>
+      <Button
+        title="Create custom food"
+        onPress={() => {
+          router.push({
+            pathname: "/food/customFood/create-custom-food",
+          });
+        }}
+      ></Button>
       <FlatList
-        data={searchFood}
+        data={customFoodData}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => {
           return (
             <SearchItem
               food={item}
-              isSelected={selectedFoodId === item.id}
+              isSelected={selectedCustomFoodId === item.id}
               onPress={() => {
-                setSelectedFood(item);
-                setSelectedFoodId(item.id);
+                setSelectedCustomFoodData(item);
+                setSelectedCustomFoodId(item.id);
               }}
             />
           );
@@ -101,16 +107,5 @@ const styles = StyleSheet.create({
   textContent: {
     fontSize: 20,
     color: "#fff",
-  },
-  camera: {
-    flex: 1,
-  },
-  itemText: {
-    margin: 10,
-    color: "white",
-    fontSize: 24,
-    backgroundColor: "blue",
-    width: "100%",
-    height: 50,
   },
 });

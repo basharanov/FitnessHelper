@@ -1,8 +1,8 @@
+import SearchItem from "@/components/SearchItem";
+import { getFetch } from "@/fetchHelper/baseFetch";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
-import SearchItem from "../components/SearchItem";
-import { getFetch } from "../fetchHelper/baseFetch";
 
 type IngrediеntItems = {
   foodId: string;
@@ -28,7 +28,6 @@ type RecipeItems = {
 
 export default function Recipe() {
   const [search, setSearch] = useState("");
-  const [error, setError] = useState("");
   const [recipeData, setRecipeData] = useState<RecipeItems[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeItems>();
   const [selectedRecipeId, setSelectedRecipeId] = useState("");
@@ -48,19 +47,11 @@ export default function Recipe() {
 
   async function searchMultipleRecipes(name: string) {
     try {
-      setError("");
-
       const data = await getFetch(`/recipe/${name}`);
 
-      if (!data) {
-        setError("No data received");
-        console.log(error);
-      }
-
-      console.log("DATA:", data);
       setRecipeData(data);
-    } catch (err) {
-      console.log("Failed to fetch", err);
+    } catch (error) {
+      console.log("Failed to get recipe from db");
     }
   }
 
@@ -78,7 +69,7 @@ export default function Recipe() {
             return;
           }
           router.replace({
-            pathname: "/add-food",
+            pathname: "/food/add-food",
             params: {
               foodD: JSON.stringify(selectedRecipe),
             },
@@ -88,8 +79,8 @@ export default function Recipe() {
       <Button
         title="Create Recipe"
         onPress={() => {
-          router.replace({
-            pathname: "/create-recipe",
+          router.push({
+            pathname: "/food/recipe/create-recipe",
             params: {
               foodD: JSON.stringify(selectedRecipe),
             },

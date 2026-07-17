@@ -150,7 +150,7 @@ export default function ChangePasswordPassword() {
 
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.replace("/change-password-code")}
+          onPress={() => router.replace("/change-password/send-code")}
           disabled={isLoading}
         >
           <Text style={styles.backButtonText}>Back to verification code</Text>

@@ -44,9 +44,9 @@ export default function CreateActivity() {
         notes: notes,
       });
 
-      router.replace("/(tabs)/exerciseDiary");
+      router.replace("/exerciseDiary");
     } catch (error) {
-      console.log(error);
+      console.log("Error with creating activity");
     }
   };
 
@@ -287,7 +287,7 @@ export default function CreateActivity() {
           title="add activity"
           color="#5D605D"
           onPress={() => {
-            handleButtonPress;
+            handleButtonPress();
           }}
         />
       </View>

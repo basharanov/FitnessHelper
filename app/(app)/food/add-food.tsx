@@ -1,9 +1,9 @@
+import { useDateStore } from "@/context/dateStore";
 import { postFetch } from "@/fetchHelper/baseFetch";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { useDateStore } from "../context/dateStore";
 
 export default function addFood() {
   const [grams, setGrams] = useState("100");

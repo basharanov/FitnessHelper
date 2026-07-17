@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { Button, Text, View } from "react-native";
-import { useAuthStore } from "../../context/authStore";
-import { deleteToken } from "../../service/authToken";
+import { useAuthStore } from "@/context/authStore";
+import { deleteToken } from "@/service/authToken";
 
 export default function Profile() {
   const { logOut, user } = useAuthStore();

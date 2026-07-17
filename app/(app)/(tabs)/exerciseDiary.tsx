@@ -46,7 +46,7 @@ export default function ExerciseDiaryScreen() {
     <View style={styles.container}>
       <Button
         title="Add activity"
-        onPress={() => router.push("../add-activity")}
+        onPress={() => router.push("/activities/add-activity")}
       />
       <FlatList
         style={styles.list}

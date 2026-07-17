@@ -1,9 +1,9 @@
+import { useScannedFood } from "@/context/ScannedFoodContext";
 import { getFetch } from "@/fetchHelper/baseFetch";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRootNavigationState, useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { useScannedFood } from "../context/ScannedFoodContext";
 
 type barcodeData = {
   barcode: string;
@@ -48,7 +48,6 @@ export default function BarcodeScan() {
 
       const data = await getFetch(`/products/barcode/${string}`);
 
-      console.log("DATA:", data);
       return data;
     } catch (err) {
       setError("Failed to fetch");
@@ -97,14 +96,14 @@ export default function BarcodeScan() {
 
                 if (!validateBarcodeData(barcodeData)) {
                   router.replace({
-                    pathname: "/create-barcode-item",
+                    pathname: "/food/barcode/create-barcode-item",
                     params: { foodData: JSON.stringify(barcodeData) },
                   });
                   return;
                 }
 
                 router.replace({
-                  pathname: "/add-food",
+                  pathname: "/food/add-food",
                   params: {
                     foodD: JSON.stringify(barcodeData),
                   },

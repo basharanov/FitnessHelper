@@ -1,5 +1,5 @@
 import { postFetch } from "@/fetchHelper/baseFetch";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -14,46 +14,65 @@ import {
   View,
 } from "react-native";
 
-export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
+export default function ChangePasswordCode() {
+  const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
-  async function handleChangePassword() {
-    if (!email.trim()) {
-      Alert.alert("Missing email", "Please enter your email address.");
+  const { passwordResetRequestId } = useLocalSearchParams<{
+    passwordResetRequestId?: string | string[];
+  }>();
+
+  const resetRequestId = Array.isArray(passwordResetRequestId)
+    ? passwordResetRequestId[0]
+    : passwordResetRequestId;
+
+  async function handleVerifyCode() {
+    const normalizedCode = code.trim();
+
+    if (!resetRequestId) {
+      Alert.alert(
+        "Invalid session",
+        "The password reset session is missing. Please request a new code.",
+      );
+      return;
+    }
+
+    if (!/^\d{6}$/.test(normalizedCode)) {
+      Alert.alert(
+        "Invalid code",
+        "Please enter the six-digit code from your email.",
+      );
       return;
     }
 
     try {
       setIsLoading(true);
 
-      const response = await postFetch("/reset-password", {
-        email: email,
+      const response = await postFetch("/reset-password/validate", {
+        code: normalizedCode,
+        passwordResetRequestId: resetRequestId,
       });
-
-      console.log("hi");
 
       if (!response?.passwordResetRequestId) {
         Alert.alert(
-          "Error",
-          response?.message ?? "The reset code could not be sent.",
+          "Invalid code",
+          response?.message ?? "The code is incorrect or has expired.",
         );
         return;
       }
 
       router.replace({
-        pathname: "/change-password-code",
+        pathname: "/change-password/reset-password",
         params: {
           passwordResetRequestId: response.passwordResetRequestId,
         },
       });
     } catch (error) {
-      Alert.alert(
-        "Error",
-        "Something went wrong while sending the reset code.",
-      );
+      console.log("Failed to validate password reset code:", error);
+
+      Alert.alert("Error", "Something went wrong while validating the code.");
     } finally {
       setIsLoading(false);
     }
@@ -65,46 +84,50 @@ export default function ForgotPassword() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.content}>
-        <Text style={styles.title}>Забравена парола</Text>
+        <Text style={styles.title}>Enter verification code</Text>
 
         <Text style={styles.description}>
-          Въведи имейл на профила на който искаш да смениш паролата
+          Enter the six-digit code that was sent to your email address.
         </Text>
 
-        <Text style={styles.label}>Email</Text>
+        <Text style={styles.label}>Verification code</Text>
 
         <TextInput
           style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="example@email.com"
+          value={code}
+          onChangeText={(value) => {
+            const numericValue = value.replace(/[^0-9]/g, "");
+            setCode(numericValue);
+          }}
+          placeholder="123456"
           placeholderTextColor="#8b8b8b"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
+          keyboardType="number-pad"
+          maxLength={6}
+          autoFocus
           editable={!isLoading}
+          textContentType="oneTimeCode"
         />
 
         <TouchableOpacity
           style={[styles.button, isLoading && styles.buttonDisabled]}
-          onPress={handleChangePassword}
+          onPress={handleVerifyCode}
           disabled={isLoading}
         >
           {isLoading ? (
             <ActivityIndicator color="#ffffff" />
           ) : (
-            <Text style={styles.buttonText}>Change password</Text>
+            <Text style={styles.buttonText}>Verify code</Text>
           )}
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.replace("/login")}
+          onPress={() => router.replace("/change-password/send-email")}
           disabled={isLoading}
         >
           <Button
-            title="Обратно към логин"
-            onPress={() => router.replace("/login")}
+            title="Смени имейла"
+            onPress={() => router.replace("/change-password/send-email")}
           />
         </TouchableOpacity>
       </View>
@@ -141,14 +164,17 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   input: {
-    height: 52,
+    height: 60,
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: "#3a3a3a",
     borderRadius: 10,
     backgroundColor: "#1e1e1e",
     color: "#ffffff",
-    fontSize: 16,
+    fontSize: 26,
+    fontWeight: "700",
+    letterSpacing: 10,
+    textAlign: "center",
   },
   button: {
     height: 52,

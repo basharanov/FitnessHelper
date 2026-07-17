@@ -258,7 +258,7 @@ export default function CreateBarcodeItem() {
       const createdFood = await postFetch("/products/barcode", payload);
 
       router.replace({
-        pathname: "/add-food",
+        pathname: "/food/add-food",
         params: {
           foodD: JSON.stringify(createdFood ?? payload),
         },
@@ -276,7 +276,7 @@ export default function CreateBarcodeItem() {
   }
 
   function scanAgain() {
-    router.replace("/barcode-scan");
+    router.replace("/food/barcode/barcode-scan");
   }
 
   return (

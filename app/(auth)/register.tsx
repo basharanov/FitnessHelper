@@ -1,4 +1,5 @@
 import { postFetch } from "@/fetchHelper/baseFetch";
+import { RegisterSchema } from "@/validation/authSchemas";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
@@ -14,7 +15,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { RegisterSchema } from "../validation/authSchemas";
 
 export default function Register() {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -30,22 +30,13 @@ export default function Register() {
 
   async function register(body: object) {
     try {
-      console.log(body);
       const data = await postFetch(`/auth/register`, body);
-
-      console.log("Register status:", data.status);
-      console.log("Register response:", data);
-
-      if (!data.ok) {
-        return;
-      }
     } catch (error) {
       console.log("Failed to register", error);
     }
   }
 
   const onSubmit = (data: any) => {
-    console.log(data);
     register({
       email: data.email,
       password: data.password,

@@ -11,8 +11,8 @@ import {
   TextInput,
   View,
 } from "react-native";
-import RecipeIngredientItem from "../components/RecipeIngredientItem";
-import SearchItem from "../components/SearchItem";
+import RecipeIngredientItem from "@/components/RecipeIngredientItem";
+import SearchItem from "@/components/SearchItem";
 
 class Ingredient {
   id: string;
@@ -86,7 +86,6 @@ export default function CreteRecipe() {
         return setSearchIngredients([]);
       }
       const data = await getFetch(`/food/${name}`);
-      console.log("Data: ", data);
       setSearchIngredients(data);
     } catch (error) {
       console.log("Failed fetching data: ", error);
