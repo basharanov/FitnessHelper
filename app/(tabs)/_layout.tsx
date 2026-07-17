@@ -1,12 +1,14 @@
+import SelectedDatePicker from "@/components/SelectedDatePicker";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { StyleSheet } from "react-native";
 
 export default function TabsLayout() {
   return (
     <>
       <Tabs
         screenOptions={{
+          headerShown: true,
+          header: () => <SelectedDatePicker />,
           tabBarActiveTintColor: "green",
           tabBarStyle: {
             backgroundColor: "#252625",
@@ -17,7 +19,6 @@ export default function TabsLayout() {
           name="index"
           options={{
             headerTitle: "Fitness Helper",
-            headerShown: false,
             tabBarIcon: ({ focused, color }) => (
               <Ionicons
                 name={"home"}
@@ -30,7 +31,6 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="foodDiary"
           options={{
-            headerShown: false,
             tabBarIcon: ({ focused, color }) => (
               <Ionicons
                 name={"fast-food"}
@@ -43,7 +43,6 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="exerciseDiary"
           options={{
-            headerShown: false,
             tabBarIcon: ({ focused, color }) => (
               <Ionicons
                 name={"barbell"}
@@ -56,7 +55,6 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="profile"
           options={{
-            headerShown: false,
             tabBarIcon: ({ focused, color }) => (
               <AntDesign
                 name="profile"
@@ -70,16 +68,3 @@ export default function TabsLayout() {
     </>
   );
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#252625",
-  },
-  icon: {
-    color: "white",
-    fontSize: 24,
-  },
-});

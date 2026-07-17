@@ -1,21 +1,13 @@
+import { useDateStore } from "@/context/dateStore";
 import { getFetch } from "@/fetchHelper/baseFetch";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  FlatList,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Button, FlatList, StyleSheet, Text, View } from "react-native";
 import FoodCard from "../../components/FoodCard";
 import ProgressCircle from "../../components/ProgressCircle";
 import useScannedFoodContext, {
   FoodData,
 } from "../../context/ScannedFoodContext";
-import { useDateStore } from "../../context/dateStore";
 
 export default function FoodDiaryScreen() {
   const [targetCalories, onChangeTargetCalories] = React.useState(2000);
@@ -24,19 +16,15 @@ export default function FoodDiaryScreen() {
   const [targetFat, onChangeTargetFat] = React.useState(70);
   const [foodName, onChangeFoodName] = React.useState("");
   const [foodData, setFoodData] = useState<FoodData | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const router = useRouter();
   const params = useLocalSearchParams<{ data?: string }>();
   const { savedFood, calculateTotalValues } = useScannedFoodContext();
   const [logs, setLogs] = useState<any[]>([]);
-  const { selectedDate, setSelectedDate } = useDateStore();
-  const [date, setDate] = useState(new Date(selectedDate));
 
   const totalValues = calculateTotalValues();
-  const showDate = () => {
-    setShowDatePicker(true);
-  };
+  const selectedDate = useDateStore((state) => state.selectedDate);
+
   const displayProcent = (
     value: number | string | undefined,
     target: number,
@@ -46,23 +34,16 @@ export default function FoodDiaryScreen() {
     return Math.round((value / target) * 100);
   };
 
-  const formatDateForBackend = (date: Date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  };
-
   async function getFoodLogsByDate() {
     try {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
+      const selectDate = selectedDate;
+      const year = selectDate.getFullYear();
+      const month = String(selectDate.getMonth() + 1).padStart(2, "0");
+      const day = String(selectDate.getDate()).padStart(2, "0");
 
       const formattedDate = `${year}-${month}-${day}`;
-      const data = await getFetch(`/food-logs/${formattedDate}`);
 
+      const data = await getFetch(`/food-logs/${formattedDate}`);
       setLogs(data.logs);
     } catch (error) {
       console.log("Failed fetching food logs:", error);
@@ -75,26 +56,6 @@ export default function FoodDiaryScreen() {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Button title={`Pick Date:`} onPress={() => setShowDatePicker(true)} />
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            maximumDate={new Date()}
-            onChange={(event, selectedDate) => {
-              if (Platform.OS === "android") {
-                setShowDatePicker(false);
-              }
-              if (selectedDate) {
-                setDate(selectedDate);
-                const formatertedDate = formatDateForBackend(selectedDate);
-                setSelectedDate(formatertedDate);
-              }
-            }}
-          />
-        )}
-      </View>
       <View style={styles.summaryBox}>
         <View style={styles.macroItem}>
           <ProgressCircle

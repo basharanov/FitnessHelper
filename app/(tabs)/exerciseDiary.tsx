@@ -7,7 +7,7 @@ export default function ExerciseDiaryScreen() {
       <Text style={styles.text}>Exercise Screen.</Text>
       <Button
         title="Add activity"
-        onPress={() => router.replace("../add-activity")}
+        onPress={() => router.push("../add-activity")}
       />
     </View>
   );
