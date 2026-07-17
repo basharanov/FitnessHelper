@@ -1,5 +1,6 @@
-import { deleteToken, saveToken } from "@/service/authToken";
+import { deleteToken, getToken, saveToken } from "@/service/authToken";
 import { deleteItemAsync, getItem, setItem } from "expo-secure-store";
+import { jwtDecode } from "jwt-decode";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -17,6 +18,7 @@ type UserState = {
   logIn: (token: string, userData: User) => void;
   logOut: () => void;
   user: User;
+  checkAuth: () => void;
 };
 
 export const useAuthStore = create(
@@ -57,6 +59,85 @@ export const useAuthStore = create(
             },
           };
         });
+      },
+      checkAuth: async () => {
+        const token = await getToken();
+
+        if (!token) {
+          set({
+            isLoggedIn: false,
+            user: {
+              email: "",
+              name: "",
+              birthDate: new Date(),
+              height: 0,
+              currentWeight: 0,
+              goalWeight: 0,
+            },
+          });
+
+          return;
+        }
+
+        try {
+          const decodedToken = jwtDecode(token);
+
+          if (decodedToken.exp === undefined) {
+            set({
+              isLoggedIn: false,
+              user: {
+                email: "",
+                name: "",
+                birthDate: new Date(),
+                height: 0,
+                currentWeight: 0,
+                goalWeight: 0,
+              },
+            });
+            return;
+          }
+
+          const expirationTime = decodedToken.exp * 1000;
+          const isExpired = expirationTime <= Date.now();
+
+          if (isExpired) {
+            await deleteToken();
+
+            set({
+              isLoggedIn: false,
+              user: {
+                email: "",
+                name: "",
+                birthDate: new Date(),
+                height: 0,
+                currentWeight: 0,
+                goalWeight: 0,
+              },
+            });
+
+            return;
+          }
+
+          set({
+            isLoggedIn: true,
+          });
+        } catch (error) {
+          console.error("Invalid token:", error);
+
+          await deleteToken();
+
+          set({
+            isLoggedIn: false,
+            user: {
+              email: "",
+              name: "",
+              birthDate: new Date(),
+              height: 0,
+              currentWeight: 0,
+              goalWeight: 0,
+            },
+          });
+        }
       },
     }),
     {
