@@ -51,7 +51,19 @@ export default function FoodDiaryScreen() {
 
       <FlatList
         data={logs}
-        renderItem={({ item }) => <FoodCard food={item} onDelete={() => {}} />}
+        renderItem={({ item }) => (
+          <FoodCard
+            food={item}
+            onPress={() => {
+              router.push({
+                pathname: "/food/edit",
+                params: {
+                  foodLogId: item.id,
+                },
+              });
+            }}
+          />
+        )}
         keyExtractor={(item, index) => `${item?.id.toString()}-${index}`}
       />
     </View>

@@ -1,10 +1,10 @@
+import { useAuthStore } from "@/context/authStore";
+import { postLoginFetch } from "@/fetchHelper/baseFetch";
+import { LoginSchema } from "@/validation/authSchemas";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { useAuthStore } from "@/context/authStore";
-import { postLoginFetch } from "@/fetchHelper/baseFetch";
-import { LoginSchema } from "@/validation/authSchemas";
 
 export default function Login() {
   const { logIn } = useAuthStore();

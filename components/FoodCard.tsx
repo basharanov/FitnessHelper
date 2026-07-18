@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { FoodData } from "../context/ScannedFoodContext";
 
 const foodCardPicture = require("../assets/images/foodCardPicture.webp");
 
 type FoodCardProps = {
   food: FoodData;
-  onDelete: () => void;
+  onPress: () => void;
 };
 
-export default function FoodCard({ food, onDelete }: FoodCardProps) {
+export default function FoodCard({ food, onPress }: FoodCardProps) {
   const [grams, setGrams] = useState("100");
 
   const gramsNumber = Number(grams.replace(",", ".")) || 0;
 
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={onPress}>
       <Image source={foodCardPicture} style={styles.image} />
       <View style={styles.textArea}>
         <Text style={styles.foodName}>{food.name}</Text>
@@ -46,7 +46,7 @@ export default function FoodCard({ food, onDelete }: FoodCardProps) {
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

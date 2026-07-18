@@ -46,3 +46,36 @@ export async function postLoginFetch(route: string, body: object) {
 
   return data;
 }
+
+export async function patchFetch(route: string, body: object) {
+  const token = await getToken();
+  const response = await fetch(`${baseUrl}${route}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json();
+  console.log("Patch fetch: ", data);
+
+  return data;
+}
+
+export async function deleteFetch(route: string) {
+  const token = await getToken();
+  const response = await fetch(`${baseUrl}${route}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+  console.log("Patch fetch: ", data);
+
+  return data;
+}
